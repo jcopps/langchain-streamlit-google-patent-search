@@ -1,5 +1,5 @@
 <h1 align="center">
-📖 LangChain-Streamlit-Docker App Template
+📖 Chat with Google Patents using LangChain-Streamlit App Template
 </h1>
 
 ![UI](ui.png?raw=true)
@@ -7,17 +7,19 @@
 ## 🔧 Features
 
 - Basic Skeleton App configured with `openai` API
+- Chat with a patent that is available on Google
+- Provide its link, and start chatting
+- Question around any portion of the patent
 - A ChatBot using LangChain and Streamlit
-- Docker Support with Optimisation Cache etc
-- Deployment on Streamlit Public Cloud
-- Deployment on Google Cloud App Engine
-- Deployment on Google Cloud using `Cloud Run`
 
 This repo contains an `main.py` file which has a template for a chatbot implementation.
 
 ## Adding your chain
 To add your chain, you need to change the `load_chain` function in `main.py`.
 Depending on the type of your chain, you may also need to change the inputs/outputs that occur later on.
+This requires Chrome to be available on the machine where the streamlit is installed and run.
+Chrome is used to download the patent as a PDF.
+ChromaDB is used for storing the PDF in vectorised form splitting them by pages using NLTK splitter.
 
 
 ## 💻 Running Locally
