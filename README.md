@@ -27,7 +27,7 @@ ChromaDB is used for storing the PDF in vectorised form splitting them by pages 
 1. Clone the repository📂
 
 ```bash
-git clone https://github.com/amjadraza/langchain-streamlit-docker-template.git
+git clone https://github.com/jcopps/langchain-streamlit-google-patent-search.git
 ```
 
 2. Install dependencies with [Poetry](https://python-poetry.org/) and activate virtual environment🔨
@@ -43,7 +43,7 @@ poetry shell
 streamlit run app/main.py 
 ```
 
-Run App using Docker
+Run App using Docker (Not tested - Chrome dependency)
 --------------------
 This project includes `Dockerfile` to run the app in Docker container. In order to optimise the Docker Image
 size and building time with cache techniques, I have follow tricks in below Article 
@@ -51,22 +51,23 @@ https://medium.com/@albertazzir/blazing-fast-python-docker-builds-with-poetry-a7
 
 Build the docker container
 
-``docker  build . -t langchain-chat-app:latest ``
+``docker  build . -t google-patent-chat-app:latest ``
 
 To generate Image with `DOCKER_BUILDKIT`, follow below command
 
-```DOCKER_BUILDKIT=1 docker build --target=runtime . -t langchain-chat-app:latest```
+```DOCKER_BUILDKIT=1 docker build --target=runtime . -t google-patent-chat-app:latest```
 
 1. Run the docker container directly 
 
-``docker run -d --name langchain-chat-app -p 8080:8080 langchain-chat-app ``
+``docker run -d --name google-patent-chat-app -p 8080:8080 google-patent-chat-app ``
+``docker run -d --name google-patent-chat-app -p 8080:8080 google-patent-chat-app ``
 
 2. Run the docker container using docker-compose (Recommended)
 
 ``docker-compose up``
 
 
-Deploy App on Streamlit Public Cloud
+Deploy App on Streamlit Public Cloud (Not tested - Chrome dependency)
 ------------------------------------
 This app can be deployed on Streamlit Public Cloud using GitHub. Below is the Link to 
 Publicly deployed App
@@ -74,7 +75,7 @@ Publicly deployed App
 https://langchain-docker-template-amjadraza.streamlit.app/
 
 
-Deploy App on Google App Engine
+Deploy App on Google App Engine (Not tested - Chrome dependency)
 --------------------------------
 This app can be deployed on Google App Engine following below steps.
 
@@ -103,7 +104,7 @@ I have adopted `Dockerfile` to deploy the app on GCP APP Engine.
 https://langchain-chat.ts.r.appspot.com/
 
 
-Deploy App on Google Cloud using Cloud Run
+Deploy App on Google Cloud using Cloud Run (Not tested - Chrome dependency)
 ------------------------------------------
 
 This app can be deployed on Google Cloud using Cloud Run following below steps.
@@ -152,7 +153,7 @@ gcloud projects add-iam-policy-binding langchain-chat \
 
 4. Generate the Docker
 
-`DOCKER_BUILDKIT=1 docker build --target=runtime . -t australia-southeast1-docker.pkg.dev/langchain-chat/app/langchain-chat-app:latest`
+`DOCKER_BUILDKIT=1 docker build --target=runtime . -t australia-southeast1-docker.pkg.dev/langchain-chat/app/google-patent-chat-app:latest`
 
 5. Push Image to Google Artifact's Registry
 
@@ -178,14 +179,14 @@ gcloud artifacts repositories create app \
 
 Once ready, let us push the image to location
 
-`docker push australia-southeast1-docker.pkg.dev/langchain-chat/app/langchain-chat-app:latest`
+`docker push australia-southeast1-docker.pkg.dev/langchain-chat/app/google-patent-chat-app:latest`
 
 6. Deploy using Cloud Run
 
 Once image is pushed to Google Cloud Artifacts Registry. Let us deploy the image.
 
 ```
-gcloud run deploy langchain-chat-app --image=australia-southeast1-docker.pkg.dev/langchain-chat/app/langchain-chat-app:latest \
+gcloud run deploy google-patent-chat-app --image=australia-southeast1-docker.pkg.dev/langchain-chat/app/google-patent-chat-app:latest \
     --region=australia-southeast1 \
     --service-account=langchain-app-cr@langchain-chat.iam.gserviceaccount.com
 ```
