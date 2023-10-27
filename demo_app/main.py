@@ -21,6 +21,8 @@ from langchain.embeddings import HuggingFaceEmbeddings
 
 from demo_app.patent_downloader import PatentDownloader
 
+PERSISTED_DIRECTORY = "."
+
 
 def load_docs(document_path):
     loader = UnstructuredPDFLoader(document_path)
@@ -30,16 +32,39 @@ def load_docs(document_path):
     return text_splitter.split_documents(documents)
 
 
+def already_indexed(vectordb, file_name):
+    indexed_sources = set(
+        x["source"] for x in vectordb.get(include=["metadatas"])["metadatas"]
+    )
+
+    if file_name in indexed_sources:
+        return True
+    else:
+        return False
+
+
 def load_chain(file_name=None):
     """Logic for loading the chain you want to use should go here."""
-    docs = load_docs(file_name)
-    st.write("Length: ", len(docs))
-    st.write(docs[0])
-    st.write(docs[-1])
-    vectordb = Chroma.from_documents(
-        docs, HuggingFaceEmbeddings(), persist_directory="."
+    loaded_patent = st.session_state.get("LOADED_PATENT")
+
+    vectordb = Chroma(
+        persist_directory=PERSISTED_DIRECTORY,
+        embedding_function=HuggingFaceEmbeddings(),
     )
-    vectordb.persist()
+    if loaded_patent == file_name or already_indexed(vectordb, file_name):
+        st.write("Already indexed")
+    else:
+        vectordb.delete_collection()
+
+        docs = load_docs(file_name)
+        st.write("Length: ", len(docs))
+
+        vectordb = Chroma.from_documents(
+            docs, HuggingFaceEmbeddings(), persist_directory=PERSISTED_DIRECTORY
+        )
+        vectordb.persist()
+        st.session_state["LOADED_PATENT"] = file_name
+
     memory = ConversationBufferMemory(
         memory_key="chat_history",
         return_messages=True,
@@ -48,8 +73,8 @@ def load_chain(file_name=None):
     )
     return ConversationalRetrievalChain.from_llm(
         OpenAI(temperature=0),
-        vectordb.as_retriever(search_kwargs={"k": 6}),
-        return_source_documents=True,
+        vectordb.as_retriever(search_kwargs={"k": 3}),
+        return_source_documents=False,
         memory=memory,
     )
 
@@ -139,7 +164,7 @@ if __name__ == "__main__":
                     time.sleep(0.05)
                     # Add a blinking cursor to simulate typing
                     message_placeholder.markdown(full_response + "▌")
-                message_placeholder.markdown(full_response)
+                # message_placeholder.markdown(full_response)
             st.session_state.messages.append(
                 {"role": "assistant", "content": full_response}
             )
