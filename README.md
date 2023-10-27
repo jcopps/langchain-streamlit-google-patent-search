@@ -6,11 +6,11 @@
 
 ## 🔧 Features
 
-- Basic Skeleton App configured with `openai` API
-- Chat with a patent that is available on Google
+- Chat with a `patent` that is available on Google
 - Provide its link, and start chatting
 - Question around any portion of the patent
 - A ChatBot using LangChain and Streamlit
+- It uses Open AI LLM, other providers will be supported soon
 
 This repo contains an `main.py` file which has a template for a chatbot implementation.
 
